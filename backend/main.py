@@ -127,26 +127,26 @@ GINI = [
 ]
 
 
-@app.get("/api/protests", summary="Get protests time-series data")
+@app.get("/protests", summary="Get protests time-series data")
 async def get_protests():
     """Return the protests data as a list of records sorted by date descending."""
     # Already in descending order; send as-is
     return DATA
 
 
-@app.get("/api/unemployment", summary="Get unemployment data per quarter")
+@app.get("/unemployment", summary="Get unemployment data per quarter")
 async def get_unemployment():
     """Return unemployment percentage data (list sorted by period descending)."""
     return UNEMPLOYMENT
 
 
-@app.get("/api/gdp_ppp", summary="Get GDP per capita (PPP) per year")
+@app.get("/gdp_ppp", summary="Get GDP per capita (PPP) per year")
 async def get_gdp_ppp():
     """Return GDP per capita PPP data (list sorted by year descending)."""
     return GDP_PPP
 
 
-@app.get("/api/migration", summary="Get net migration data per year")
+@app.get("/migration", summary="Get net migration data per year")
 async def get_migration():
     """Return net migration data (list sorted by year descending)."""
     return MIGRATION

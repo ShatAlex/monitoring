@@ -10,6 +10,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://31.129.48.166",
+        "http://monitoring-ge-rs.ru",
     ],
     allow_credentials=True,
     allow_methods=["*"],

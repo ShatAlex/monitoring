@@ -28,6 +28,9 @@ ChartJS.register(
 
 const titleFont = { size: 18, weight: 'bold' };
 
+// Добавляем константу для базового URL API
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://31.129.48.166';
+
 function DashboardPage({
   chartData, unempData, gdpData, migrationData, giniData, selectedMigrationCountry, setSelectedMigrationCountry, chartOptions, migrationOptions, barOptions, areaOptions, giniOptions, titleFont, protestsDates
 }) {
@@ -169,27 +172,27 @@ export default function App() {
   const [protestsDates, setProtestsDates] = useState([]);
 
   useEffect(() => {
-    const fetchProtests = fetch('http://localhost:8000/api/protests').then((r) => {
+    const fetchProtests = fetch(`${API_BASE_URL}/api/protests`).then((r) => {
       if (!r.ok) throw new Error('protests fetch failed');
       return r.json();
     });
 
-    const fetchUnemp = fetch('http://localhost:8000/api/unemployment').then((r) => {
+    const fetchUnemp = fetch(`${API_BASE_URL}/api/unemployment`).then((r) => {
       if (!r.ok) throw new Error('unemployment fetch failed');
       return r.json();
     });
 
-    const fetchGdp = fetch('http://localhost:8000/api/gdp_ppp').then((r) => {
+    const fetchGdp = fetch(`${API_BASE_URL}/api/gdp_ppp`).then((r) => {
       if (!r.ok) throw new Error('gdp fetch failed');
       return r.json();
     });
 
-    const fetchMigration = fetch('http://localhost:8000/api/migration').then((r) => {
+    const fetchMigration = fetch(`${API_BASE_URL}/api/migration`).then((r) => {
       if (!r.ok) throw new Error('migration fetch failed');
       return r.json();
     });
 
-    const fetchGini = fetch('http://localhost:8000/api/gini').then((r) => {
+    const fetchGini = fetch(`${API_BASE_URL}/api/gini`).then((r) => {
       if (!r.ok) throw new Error('gini fetch failed');
       return r.json();
     });

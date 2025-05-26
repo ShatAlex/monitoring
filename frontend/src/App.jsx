@@ -63,12 +63,45 @@ function DashboardPage({
     <main className="main-content">
       {(chartData && unempData && gdpData && migrationData && giniData) && (
         <div className="charts-container grid-2x2">
-          {/* 1. Индекс Gini */}
+          {/* 1. Протесты и беспорядки (теперь первый узкий график) */}
           <div className="chart-card chart-card-narrow" style={{ gridColumn: '1 / 2', gridRow: '1 / 2' }}>
+            <Bar data={chartData} options={protestsOptions} height={400} />
+          </div>
+          {/* 2. Тональность публикаций (первый широкий график) */}
+          {articlesData && articlesData.labels && articlesData.datasets && (
+            <div className="chart-card chart-card-wide" style={{ gridColumn: '2 / 3', gridRow: '1 / 2' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 8, position: 'relative' }}>
+                <span style={{ fontWeight: 600, fontSize: '1.1rem', flexGrow: 1, textAlign: 'center' }}>Тональность публикаций</span>
+                <div style={{ position: 'absolute', right: 0 }}>
+                  <div className="nav-segment">
+                    <button
+                      className={selectedArticlesCountry === 'georgia' ? 'active' : ''}
+                      onClick={() => setSelectedArticlesCountry('georgia')}
+                    >
+                      Грузия
+                    </button>
+                    <button
+                      className={selectedArticlesCountry === 'serbia' ? 'active' : ''}
+                      onClick={() => setSelectedArticlesCountry('serbia')}
+                    >
+                      Сербия
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <Bar data={articlesData} options={articlesOptions} height={370} />
+            </div>
+          )}
+          {/* 3. Индекс Джини (теперь второй узкий график) */}
+          <div className="chart-card chart-card-narrow" style={{ gridColumn: '1 / 2', gridRow: '2 / 3' }}>
             <Line data={giniData} options={giniOptions} height={400} />
           </div>
-          {/* 2. Миграция */}
-          <div className="chart-card chart-card-wide" style={{ gridColumn: '2 / 3', gridRow: '1 / 2' }}>
+          {/* 4. ВВП (теперь третий узкий график) */}
+          <div className="chart-card chart-card-narrow" style={{ gridColumn: '1 / 2', gridRow: '3 / 4' }}>
+            <Line data={gdpData} options={areaOptions} height={400} />
+          </div>
+          {/* 5. Сальдо миграции (теперь второй широкий график) */}
+          <div className="chart-card chart-card-wide" style={{ gridColumn: '2 / 3', gridRow: '2 / 3' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 8, position: 'relative' }}>
               <span style={{ fontWeight: 600, fontSize: '1.1rem', flexGrow: 1, textAlign: 'center' }}>Сальдо миграции, тыс. чел.</span>
               <div style={{ position: 'absolute', right: 0 }}>
@@ -121,43 +154,10 @@ function DashboardPage({
               height={370}
             />
           </div>
-          {/* 3. ВВП */}
-          <div className="chart-card chart-card-narrow" style={{ gridColumn: '1 / 2', gridRow: '2 / 3' }}>
-            <Line data={gdpData} options={areaOptions} height={400} />
-          </div>
-          {/* 4. Безработица */}
-          <div className="chart-card chart-card-wide" style={{ gridColumn: '2 / 3', gridRow: '2 / 3' }}>
+          {/* 6. Безработица (остается на месте) */}
+          <div className="chart-card chart-card-wide" style={{ gridColumn: '2 / 3', gridRow: '3 / 4' }}>
             <Bar data={unempData} options={barOptions} height={400} />
           </div>
-          {/* 5. Численность протестов */}
-          <div className="chart-card chart-card-narrow" style={{ gridColumn: '1 / 2', gridRow: '3 / 4' }}>
-            <Bar data={chartData} options={protestsOptions} height={400} />
-          </div>
-          {/* 6. Публикации о протестах */}
-          {articlesData && (
-            <div className="chart-card chart-card-wide" style={{ gridColumn: '2 / 3', gridRow: '3 / 4' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 8, position: 'relative' }}>
-                <span style={{ fontWeight: 600, fontSize: '1.1rem', flexGrow: 1, textAlign: 'center' }}>Публикации о протестах</span>
-                <div style={{ position: 'absolute', right: 0 }}>
-                  <div className="nav-segment">
-                    <button
-                      className={selectedArticlesCountry === 'georgia' ? 'active' : ''}
-                      onClick={() => setSelectedArticlesCountry('georgia')}
-                    >
-                      Грузия
-                    </button>
-                    <button
-                      className={selectedArticlesCountry === 'serbia' ? 'active' : ''}
-                      onClick={() => setSelectedArticlesCountry('serbia')}
-                    >
-                      Сербия
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <Bar data={articlesData} options={articlesOptions} height={370} />
-            </div>
-          )}
         </div>
       )}
     </main>
@@ -165,10 +165,174 @@ function DashboardPage({
 }
 
 function IndicatorsPage() {
-  return <div style={{padding:'2rem'}}>Показатели (в разработке)</div>;
+  return (
+    <div style={{padding:'1.5rem', maxWidth: '100%', margin: '0 auto', fontSize: '1.08rem', lineHeight: 1.7, display: 'flex', gap: '2rem', justifyContent: 'space-between'}}>
+      <div style={{flex: 1, maxWidth: '50%'}}>
+        <h2 style={{marginTop:0}}>Показатели социального напряжения</h2>
+        <p>
+          <b>Степень социального напряжения</b> в стране рассчитывается на основании следующих групп показателей:
+        </p>
+        <ul>
+          <li><b>Экономические:</b>
+            <ul>
+              <li><b>Процент безработицы</b> (раз в квартал) — высокий уровень безработицы увеличивает социальную нестабильность, снижает уверенность в будущем.</li>
+              <li><b>Индекс Джини</b> (ежегодно) — отражает уровень неравенства: чем выше, тем больше риск социальной напряжённости.</li>
+              <li><b>ВВП на душу населения по ППС</b> (ежегодно) — отражает общий уровень благосостояния; низкий ВВП связан с большим количеством экономических проблем.</li>
+            </ul>
+          </li>
+          <li><b>Политические:</b>
+            <ul>
+              <li><b>Количество протестов</b> (раз в неделю) — частота протестов указывает на уровень недовольства и политическую активность.</li>
+              <li><b>Число протестующих</b> (раз в неделю) — массовость протестов отражает глубину и масштаб недовольства.</li>
+            </ul>
+          </li>
+          <li><b>Социальные:</b>
+            <ul>
+              <li><b>Уровень миграции</b> (ежегодно) — высокий отток населения часто связан с неудовлетворённостью условиями жизни.</li>
+              <li><b>Количество негативных статей</b> (раз в неделю) — рост негативных публикаций в СМИ отражает общественные тревоги и проблемы.</li>
+              <li><b>Количество позитивных статей</b> (раз в неделю) — позитивные новости могут снижать общий уровень напряжённости.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div style={{flex: 1, maxWidth: '50%'}}>
+        <h2 style={{marginTop:0}}>Формула расчёта индекса</h2>
+        <pre style={{background:'#f7f7fa', borderRadius:8, padding:'1.1em', fontSize:'1em', overflowX:'auto'}}>
+СН = α × <span style={{color:'#0066cc'}}>Экономика</span> + β × <span style={{color:'#cc0066'}}>Политика</span> + γ × <span style={{color:'#00cc66'}}>Социум</span>
+        </pre>
+        <ul>
+          <li>α, β, γ — веса категорий (например, 0.5, 0.3, 0.2), которые можно настроить под специфику страны.</li>
+          <li>Экономика, Политика, Социум — нормализованные подындексы (от 0 до 1).</li>
+        </ul>
+        <b>Экономика:</b>
+        <pre style={{background:'#f7f7fa', borderRadius:8, padding:'0.7em', fontSize:'1em', overflowX:'auto', color:'#0066cc'}}>
+Экономика = (Безработица % + Индекс Джини + (1 − ВВП)) / 3
+        </pre>
+        <b>Политика:</b>
+        <pre style={{background:'#f7f7fa', borderRadius:8, padding:'0.7em', fontSize:'1em', overflowX:'auto', color:'#cc0066'}}>
+Политика = (Кол-во протестов + Кол-во протестующих) / 2
+        </pre>
+        <b>Социум:</b>
+        <pre style={{background:'#f7f7fa', borderRadius:8, padding:'0.7em', fontSize:'1em', overflowX:'auto', color:'#00cc66'}}>
+Социум = (Миграция + (Негативные статьи − Позитивные статьи)) / 2
+        </pre>
+        <p style={{color:'#888', fontSize:'0.98em', marginTop:'1.5rem'}}>
+          <b>Примечание:</b> Все показатели предварительно нормализуются по историческим минимумам и максимумам.
+        </p>
+      </div>
+    </div>
+  );
 }
+
 function PracticalPage() {
-  return <div style={{padding:'2rem'}}>Практическая значимость (в разработке)</div>;
+  return (
+    <div style={{
+      minHeight: 'calc(100vh - 120px)',
+      background: 'linear-gradient(120deg, #f6f7fb 0%, #e9ecf3 100%)',
+      padding: '2.5rem 1rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '2.5rem',
+        width: '100%',
+        maxWidth: 1100,
+        marginBottom: '2.5rem',
+      }}>
+        <div style={{
+          position: 'relative',
+          borderRadius: '18px',
+          overflow: 'hidden',
+          boxShadow: '0 4px 24px 0 rgba(0,0,0,0.10)',
+          background: '#fff',
+          border: '1.5px solid #f0f1f7'
+        }}>
+          <img src="/georgia-protest.jpg" alt="Протесты в Грузии"
+            style={{
+              width: '100%',
+              height: '340px',
+              objectFit: 'cover',
+              filter: 'brightness(0.93)'
+            }} />
+          <div style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            background: 'rgba(255,255,255,0.92)',
+            color: '#232526',
+            padding: '1.1rem 1.2rem',
+            fontSize: '1.13rem',
+            fontWeight: 500,
+            letterSpacing: 0.2,
+            borderTop: '1px solid #e0e0e0'
+          }}>
+            Грузия: рост протестной активности
+          </div>
+        </div>
+        <div style={{
+          position: 'relative',
+          borderRadius: '18px',
+          overflow: 'hidden',
+          boxShadow: '0 4px 24px 0 rgba(0,0,0,0.10)',
+          background: '#fff',
+          border: '1.5px solid #f0f1f7'
+        }}>
+          <img src="/serbia-protest.jpg" alt="Протесты в Сербии"
+            style={{
+              width: '100%',
+              height: '340px',
+              objectFit: 'cover',
+              filter: 'brightness(0.93)'
+            }} />
+          <div style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            background: 'rgba(255,255,255,0.92)',
+            color: '#232526',
+            padding: '1.1rem 1.2rem',
+            fontSize: '1.13rem',
+            fontWeight: 500,
+            letterSpacing: 0.2,
+            borderTop: '1px solid #e0e0e0'
+          }}>
+            Сербия: массовые митинги и вызовы для общества
+          </div>
+        </div>
+      </div>
+      <div style={{
+        background: '#fff',
+        borderRadius: '18px',
+        boxShadow: '0 4px 24px 0 rgba(0,0,0,0.10)',
+        padding: '2.2rem 2.5rem',
+        maxWidth: 800,
+        textAlign: 'center',
+        color: '#232526',
+        fontSize: '1.22rem',
+        fontWeight: 500,
+        lineHeight: 1.6,
+        borderLeft: '6px solid #0066cc'
+      }}>
+        <h1 style={{
+          fontSize: '2.3rem',
+          fontWeight: 800,
+          margin: '0 0 1.1rem 0',
+          letterSpacing: '-1px',
+          color: '#232526'
+        }}>Социальное напряжение сегодня</h1>
+        <p style={{ margin: 0, fontSize: '1.18rem', color: '#444', fontWeight: 500 }}>
+          Частые протесты, экономические вызовы и информационная нестабильность становятся ключевыми факторами для Грузии и Сербии. <br />
+          <span style={{ color: '#0066cc', fontWeight: 600 }}>Комплексный анализ</span> социальных индикаторов позволяет выявить скрытые тенденции, оценить риски и своевременно реагировать на изменения.<br /><br />
+          <span style={{ color: '#cc0066', fontWeight: 600 }}>Исследование актуально</span> для понимания динамики общества и принятия эффективных решений в условиях нестабильности.
+        </p>
+      </div>
+    </div>
+  );
 }
 
 function NavButton({ to, children }) {
@@ -193,35 +357,36 @@ export default function App() {
   const [articlesData, setArticlesData] = useState();
   const [articlesDates, setArticlesDates] = useState([]);
   const [newsArticles, setNewsArticles] = useState();
+  const [timer, setTimer] = useState('');
 
   useEffect(() => {
     const fetchProtests = fetch('http://31.129.48.166/api/protests').then((r) => {
       if (!r.ok) throw new Error('protests fetch failed');
       return r.json();
     });
-
     const fetchUnemp = fetch('http://31.129.48.166/api/unemployment').then((r) => {
       if (!r.ok) throw new Error('unemployment fetch failed');
       return r.json();
     });
-
     const fetchGdp = fetch('http://31.129.48.166/api/gdp_ppp').then((r) => {
       if (!r.ok) throw new Error('gdp fetch failed');
       return r.json();
     });
-
     const fetchMigration = fetch('http://31.129.48.166/api/migration').then((r) => {
       if (!r.ok) throw new Error('migration fetch failed');
       return r.json();
     });
-
     const fetchGini = fetch('http://31.129.48.166/api/gini').then((r) => {
       if (!r.ok) throw new Error('gini fetch failed');
       return r.json();
     });
+    const fetchNewsArticles = fetch('http://31.129.48.166/api/news_articles').then((r) => {
+      if (!r.ok) throw new Error('news_articles fetch failed');
+      return r.json();
+    });
 
-    Promise.all([fetchProtests, fetchUnemp, fetchGdp, fetchMigration, fetchGini])
-      .then(([protestsJson, unempJson, gdpJson, migrationJson, giniJson]) => {
+    Promise.all([fetchProtests, fetchUnemp, fetchGdp, fetchMigration, fetchGini, fetchNewsArticles])
+      .then(([protestsJson, unempJson, gdpJson, migrationJson, giniJson, newsArticlesJson]) => {
         // protests processing
         const labels = protestsJson
           .map((row) => {
@@ -386,6 +551,7 @@ export default function App() {
               borderColor: 'rgba(153, 102, 255, 1)',
               backgroundColor: 'rgba(153, 102, 255, 0.2)',
               tension: 0.2,
+              fill: false,
             },
             {
               label: 'Сербия',
@@ -393,9 +559,12 @@ export default function App() {
               borderColor: 'rgba(75, 192, 192, 1)',
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               tension: 0.2,
+              fill: false,
             },
           ],
         });
+
+        setNewsArticles(newsArticlesJson);
 
         setLoading(false);
       })
@@ -540,15 +709,6 @@ export default function App() {
   };
 
   useEffect(() => {
-    fetch('/api/news_articles')
-      .then(r => {
-        if (!r.ok) throw new Error('news_articles fetch failed');
-        return r.json();
-      })
-      .then(data => setNewsArticles(data));
-  }, []);
-
-  useEffect(() => {
     if (!newsArticles) return;
     // Сортируем по дате (ISO-8601)
     const sorted = [...newsArticles].sort((a, b) => a.date.localeCompare(b.date));
@@ -590,6 +750,7 @@ export default function App() {
     });
   }, [newsArticles, selectedArticlesCountry]);
 
+  const MONTHS = ['', 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
   const articlesOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -605,7 +766,6 @@ export default function App() {
             let year = '';
             if (iso) year = iso.split('-')[0];
             const [day, month] = raw.split('.');
-            const MONTHS = ['', 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
             const monthName = MONTHS[parseInt(month, 10)];
             return `${parseInt(day,10)} ${monthName}${year ? ', ' + year : ''}`;
           },
@@ -613,21 +773,42 @@ export default function App() {
         },
       },
     },
+    layout: { padding: { bottom: 40 } },
     scales: {
       x: {
         stacked: true,
         ticks: {
-          font: { size: 11 },
-          padding: 8,
+          font: { size: 9 },
+          padding: 4,
           minRotation: 0,
           maxRotation: 0,
-          maxTicksLimit: 24,
-          autoSkip: false,
+          maxTicksLimit: 10,
+          autoSkip: true,
         },
       },
       y: { stacked: true, beginAtZero: true },
     },
   };
+
+  useEffect(() => {
+    function updateTimer() {
+      const now = new Date();
+      const nextUpdate = new Date('2025-06-02T00:00:00');
+      const diff = nextUpdate - now;
+      if (diff <= 0) {
+        setTimer('00:00:00');
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const secs = Math.floor((diff / 1000) % 60);
+      setTimer(`${days > 0 ? days + 'д ' : ''}${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`);
+    }
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <BrowserRouter>
@@ -635,12 +816,47 @@ export default function App() {
         <nav className="nav" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span className="logo">Социальное напряжение в Грузии и Сербии</span>
           <div className="nav-buttons">
+            <NavButton to="/">Главная</NavButton>
             <NavButton to="/dashboard">Дашборд</NavButton>
             <NavButton to="/indicators">Показатели</NavButton>
-            <NavButton to="/practical">Практическая значимость</NavButton>
           </div>
         </nav>
       </header>
+      <div className="tension-indicator-bar" style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '2.5rem',
+        background: '#f3f4fa',
+        borderBottom: '1px solid #e0e0e0',
+        padding: '1.2rem 0 0.7rem 0',
+        fontSize: '1.1rem',
+        fontWeight: 500,
+        position: 'relative',
+      }}>
+        {/* Таймер справа */}
+        <div style={{ position: 'absolute', right: 32, top: 18, color: '#888', fontSize: '1.05em', fontWeight: 400 }}>
+          До следующего обновления: {timer}
+        </div>
+        {/* Грузия */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ color: '#9966ff', fontWeight: 700, fontSize: '1.15em' }}>Грузия:</span>
+          <span style={{ fontWeight: 700, fontSize: '1.25em', color: '#222' }}>25,89%</span>
+          <span style={{ fontSize: '1.1em', marginLeft: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
+            <span style={{ color: '#e53935', fontSize: '1.2em', fontWeight: 700, display: 'inline-flex', alignItems: 'center' }}>▲</span>
+            <span style={{ color: '#e53935', fontWeight: 700 }}>+1,79%</span>
+          </span>
+        </div>
+        {/* Сербия */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ color: '#4bc0c0', fontWeight: 700, fontSize: '1.15em' }}>Сербия:</span>
+          <span style={{ fontWeight: 700, fontSize: '1.25em', color: '#222' }}>11,78%</span>
+          <span style={{ fontSize: '1.1em', marginLeft: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
+            <span style={{ color: '#43a047', fontSize: '1.2em', fontWeight: 700, display: 'inline-flex', alignItems: 'center' }}>▼</span>
+            <span style={{ color: '#43a047', fontWeight: 700 }}>-1,36%</span>
+          </span>
+        </div>
+      </div>
       <Routes>
         <Route path="/dashboard" element={<DashboardPage
           chartData={chartData}
@@ -663,8 +879,7 @@ export default function App() {
           articlesOptions={articlesOptions}
         />} />
         <Route path="/indicators" element={<IndicatorsPage />} />
-        <Route path="/practical" element={<PracticalPage />} />
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<PracticalPage />} />
       </Routes>
       <footer className="footer">
         <div className="footer-inner">

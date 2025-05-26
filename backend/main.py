@@ -136,7 +136,7 @@ NEWS_ARTICLES = [
     {"date": "2025-04-21", "serbia_neg": 3, "serbia_pos": 1, "georgia_neg": 2, "georgia_pos": 1},
     {"date": "2025-04-14", "serbia_neg": 5, "serbia_pos": 2, "georgia_neg": 4, "georgia_pos": 1},
     {"date": "2025-04-14", "serbia_neg": 8, "serbia_pos": 2, "georgia_neg": 5, "georgia_pos": 2},
-    {"date": "2025-04-07", "serbia_neg": 11, "serbia_pos": 3, "georgia_neg": 4, "georgia_pos": 2},
+    {"date": "2025-04-07", "serbia_neg": 11, "serbia_pos": 3, "georgia_neg": 3, "georgia_pos": 3},
     {"date": "2025-03-31", "serbia_neg": 11, "serbia_pos": 3, "georgia_neg": 4, "georgia_pos": 2},
     {"date": "2025-03-24", "serbia_neg": 8, "serbia_pos": 2, "georgia_neg": 5, "georgia_pos": 2},
     {"date": "2025-03-17", "serbia_neg": 9, "serbia_pos": 3, "georgia_neg": 3, "georgia_pos": 2},
@@ -147,10 +147,10 @@ NEWS_ARTICLES = [
     {"date": "2025-02-10", "serbia_neg": 12, "serbia_pos": 3, "georgia_neg": 6, "georgia_pos": 2},
     {"date": "2025-02-03", "serbia_neg": 12, "serbia_pos": 3, "georgia_neg": 7, "georgia_pos": 2},
     {"date": "2025-01-27", "serbia_neg": 11, "serbia_pos": 3, "georgia_neg": 7, "georgia_pos": 3},
-    {"date": "2025-01-20", "serbia_neg": 8, "serbia_pos": 2, "georgia_neg": 6, "georgia_pos": 3},
-    {"date": "2025-01-13", "serbia_neg": 3, "serbia_pos": 2, "georgia_neg": 4, "georgia_pos": 3},
-    {"date": "2025-01-06", "serbia_neg": 2, "serbia_pos": 2, "georgia_neg": 3, "georgia_pos": 3},
-    {"date": "2024-12-30", "serbia_neg": 2, "serbia_pos": 2, "georgia_neg": 3, "georgia_pos": 4},
+    {"date": "2025-01-20", "serbia_neg": 8, "serbia_pos": 2, "georgia_neg": 7, "georgia_pos": 2},
+    {"date": "2025-01-13", "serbia_neg": 3, "serbia_pos": 2, "georgia_neg": 5, "georgia_pos": 2},
+    {"date": "2025-01-06", "serbia_neg": 2, "serbia_pos": 2, "georgia_neg": 4, "georgia_pos": 2},
+    {"date": "2024-12-30", "serbia_neg": 2, "serbia_pos": 2, "georgia_neg": 5, "georgia_pos": 0},
 ]
 
 

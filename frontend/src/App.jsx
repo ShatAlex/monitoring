@@ -29,7 +29,7 @@ ChartJS.register(
 const titleFont = { size: 18, weight: 'bold' };
 
 function DashboardPage({
-  chartData, unempData, gdpData, migrationData, giniData, selectedMigrationCountry, setSelectedMigrationCountry, chartOptions, migrationOptions, barOptions, areaOptions, giniOptions, titleFont, protestsDates
+  chartData, unempData, gdpData, migrationData, giniData, selectedMigrationCountry, setSelectedMigrationCountry, chartOptions, migrationOptions, barOptions, areaOptions, giniOptions, titleFont, protestsDates, selectedArticlesCountry, setSelectedArticlesCountry, articlesData, articlesOptions
 }) {
   // Месяцы для русской локализации
   const MONTHS = [
@@ -41,7 +41,7 @@ function DashboardPage({
     ...chartOptions,
     plugins: {
       ...chartOptions.plugins,
-      title: { display: true, text: 'Численность протестов', font: titleFont },
+      title: { display: true, text: 'Протесты и беспорядки', font: titleFont },
       tooltip: {
         callbacks: {
           ...((chartOptions.plugins && chartOptions.plugins.tooltip && chartOptions.plugins.tooltip.callbacks) || {}),
@@ -57,6 +57,7 @@ function DashboardPage({
         },
       },
     },
+    interaction: { mode: 'index', intersect: false },
   };
   return (
     <main className="main-content">
@@ -130,12 +131,33 @@ function DashboardPage({
           </div>
           {/* 5. Численность протестов */}
           <div className="chart-card chart-card-narrow" style={{ gridColumn: '1 / 2', gridRow: '3 / 4' }}>
-            <Line
-              data={chartData}
-              options={protestsOptions}
-              height={400}
-            />
+            <Bar data={chartData} options={protestsOptions} height={400} />
           </div>
+          {/* 6. Публикации о протестах */}
+          {articlesData && (
+            <div className="chart-card chart-card-wide" style={{ gridColumn: '2 / 3', gridRow: '3 / 4' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 8, position: 'relative' }}>
+                <span style={{ fontWeight: 600, fontSize: '1.1rem', flexGrow: 1, textAlign: 'center' }}>Публикации о протестах</span>
+                <div style={{ position: 'absolute', right: 0 }}>
+                  <div className="nav-segment">
+                    <button
+                      className={selectedArticlesCountry === 'georgia' ? 'active' : ''}
+                      onClick={() => setSelectedArticlesCountry('georgia')}
+                    >
+                      Грузия
+                    </button>
+                    <button
+                      className={selectedArticlesCountry === 'serbia' ? 'active' : ''}
+                      onClick={() => setSelectedArticlesCountry('serbia')}
+                    >
+                      Сербия
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <Bar data={articlesData} options={articlesOptions} height={370} />
+            </div>
+          )}
         </div>
       )}
     </main>
@@ -167,6 +189,10 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
   const [protestsDates, setProtestsDates] = useState([]);
+  const [selectedArticlesCountry, setSelectedArticlesCountry] = useState('georgia');
+  const [articlesData, setArticlesData] = useState();
+  const [articlesDates, setArticlesDates] = useState([]);
+  const [newsArticles, setNewsArticles] = useState();
 
   useEffect(() => {
     const fetchProtests = fetch('http://31.129.48.166/api/protests').then((r) => {
@@ -207,22 +233,53 @@ export default function App() {
         const georgia = protestsJson.map((row) => row.georgia).reverse();
         // Сохраняем reversed массив дат
         setProtestsDates(protestsJson.map((row) => row.date).reverse());
+        const participantsSerbia = [8000,7000,6000,10000,6000,6000,12000,25000,30000,35000,28000,35000,45000,48000,50000,50000,70000,90000,80000,40000,15000,10000,12000].map(x => x / 1000).reverse();
+        const participantsGeorgia = [3000,2800,3500,3000,2500,2800,2200,3000,3500,3500,3800,2200,5000,3000,3000,3500,4500,4000,5000,4800,4200,4000,6000].map(x => x / 1000).reverse();
+
         setChartData({
           labels,
           datasets: [
             {
-              label: 'Сербия',
+              label: 'Сербия, кол-во случаев',
               data: serbia,
-              borderColor: 'rgb(75, 192, 192)',
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              tension: 0.2,
+              backgroundColor: 'rgba(75, 192, 192, 0.5)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              type: 'bar',
+              order: 1,
             },
             {
-              label: 'Грузия',
+              label: 'Грузия, кол-во случаев',
               data: georgia,
-              borderColor: 'rgb(255, 99, 132)',
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              tension: 0.2,
+              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              type: 'bar',
+              order: 1,
+            },
+            {
+              label: 'Сербия, тыс. чел.',
+              data: participantsSerbia,
+              borderColor: 'rgba(153, 102, 255, 1)',
+              backgroundColor: 'rgba(153, 102, 255, 0.1)',
+              type: 'line',
+              fill: false,
+              tension: 0.4,
+              pointRadius: 0,
+              hoverRadius: 5,
+              borderWidth: 2,
+              order: 2,
+            },
+            {
+              label: 'Грузия, тыс. чел.',
+              data: participantsGeorgia,
+              borderColor: 'rgba(255, 159, 64, 1)',
+              backgroundColor: 'rgba(255, 159, 64, 0.1)',
+              type: 'line',
+              fill: false,
+              tension: 0.4,
+              pointRadius: 0,
+              hoverRadius: 5,
+              borderWidth: 2,
+              order: 2,
             },
           ],
         });
@@ -482,6 +539,96 @@ export default function App() {
     },
   };
 
+  useEffect(() => {
+    fetch('/api/news_articles')
+      .then(r => {
+        if (!r.ok) throw new Error('news_articles fetch failed');
+        return r.json();
+      })
+      .then(data => setNewsArticles(data));
+  }, []);
+
+  useEffect(() => {
+    if (!newsArticles) return;
+    // Сортируем по дате (ISO-8601)
+    const sorted = [...newsArticles].sort((a, b) => a.date.localeCompare(b.date));
+    // Формируем подписи дат как у графика протестов
+    const labels = sorted.map(row => {
+      const [year, month, day] = row.date.split('-');
+      return `${day}.${month}`;
+    });
+    setArticlesDates(sorted.map(row => row.date));
+    setArticlesData({
+      labels,
+      datasets: selectedArticlesCountry === 'georgia' ? [
+        {
+          label: 'Негативные',
+          data: sorted.map(row => row.georgia_neg),
+          backgroundColor: 'rgba(153, 102, 255, 0.7)',
+          stack: 'Stack 0',
+        },
+        {
+          label: 'Позитивные',
+          data: sorted.map(row => row.georgia_pos),
+          backgroundColor: 'rgba(75, 192, 192, 0.7)',
+          stack: 'Stack 0',
+        },
+      ] : [
+        {
+          label: 'Негативные',
+          data: sorted.map(row => row.serbia_neg),
+          backgroundColor: 'rgba(153, 102, 255, 0.7)',
+          stack: 'Stack 0',
+        },
+        {
+          label: 'Позитивные',
+          data: sorted.map(row => row.serbia_pos),
+          backgroundColor: 'rgba(75, 192, 192, 0.7)',
+          stack: 'Stack 0',
+        },
+      ],
+    });
+  }, [newsArticles, selectedArticlesCountry]);
+
+  const articlesOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { position: 'top' },
+      tooltip: {
+        callbacks: {
+          title: (items) => {
+            const idx = items[0].dataIndex;
+            const raw = articlesData?.labels?.[idx];
+            const iso = articlesDates?.[idx];
+            let year = '';
+            if (iso) year = iso.split('-')[0];
+            const [day, month] = raw.split('.');
+            const MONTHS = ['', 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+            const monthName = MONTHS[parseInt(month, 10)];
+            return `${parseInt(day,10)} ${monthName}${year ? ', ' + year : ''}`;
+          },
+          label: (item) => `${item.dataset.label}: ${item.formattedValue}`,
+        },
+      },
+    },
+    scales: {
+      x: {
+        stacked: true,
+        ticks: {
+          font: { size: 11 },
+          padding: 8,
+          minRotation: 0,
+          maxRotation: 0,
+          maxTicksLimit: 24,
+          autoSkip: false,
+        },
+      },
+      y: { stacked: true, beginAtZero: true },
+    },
+  };
+
   return (
     <BrowserRouter>
       <header className="header">
@@ -510,6 +657,10 @@ export default function App() {
           giniOptions={giniOptions}
           titleFont={titleFont}
           protestsDates={protestsDates}
+          selectedArticlesCountry={selectedArticlesCountry}
+          setSelectedArticlesCountry={setSelectedArticlesCountry}
+          articlesData={articlesData}
+          articlesOptions={articlesOptions}
         />} />
         <Route path="/indicators" element={<IndicatorsPage />} />
         <Route path="/practical" element={<PracticalPage />} />

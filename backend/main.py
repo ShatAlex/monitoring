@@ -127,6 +127,32 @@ GINI = [
     {"year": 2010, "georgia": 39.5, "serbia": 38.9},
 ]
 
+NEWS_ARTICLES = [
+    {"date": "2025-05-26", "serbia_neg": 3, "serbia_pos": 2, "georgia_neg": 2, "georgia_pos": 1},
+    {"date": "2025-05-19", "serbia_neg": 3, "serbia_pos": 1, "georgia_neg": 2, "georgia_pos": 1},
+    {"date": "2025-05-12", "serbia_neg": 3, "serbia_pos": 1, "georgia_neg": 2, "georgia_pos": 2},
+    {"date": "2025-05-05", "serbia_neg": 4, "serbia_pos": 2, "georgia_neg": 3, "georgia_pos": 1},
+    {"date": "2025-04-28", "serbia_neg": 3, "serbia_pos": 1, "georgia_neg": 2, "georgia_pos": 1},
+    {"date": "2025-04-21", "serbia_neg": 3, "serbia_pos": 1, "georgia_neg": 2, "georgia_pos": 1},
+    {"date": "2025-04-14", "serbia_neg": 5, "serbia_pos": 2, "georgia_neg": 4, "georgia_pos": 1},
+    {"date": "2025-04-14", "serbia_neg": 8, "serbia_pos": 2, "georgia_neg": 5, "georgia_pos": 2},
+    {"date": "2025-04-07", "serbia_neg": 11, "serbia_pos": 3, "georgia_neg": 4, "georgia_pos": 2},
+    {"date": "2025-03-31", "serbia_neg": 11, "serbia_pos": 3, "georgia_neg": 4, "georgia_pos": 2},
+    {"date": "2025-03-24", "serbia_neg": 8, "serbia_pos": 2, "georgia_neg": 5, "georgia_pos": 2},
+    {"date": "2025-03-17", "serbia_neg": 9, "serbia_pos": 3, "georgia_neg": 3, "georgia_pos": 2},
+    {"date": "2025-03-10", "serbia_neg": 12, "serbia_pos": 3, "georgia_neg": 7, "georgia_pos": 2},
+    {"date": "2025-03-03", "serbia_neg": 12, "serbia_pos": 3, "georgia_neg": 4, "georgia_pos": 2},
+    {"date": "2025-02-24", "serbia_neg": 12, "serbia_pos": 3, "georgia_neg": 5, "georgia_pos": 2},
+    {"date": "2025-02-17", "serbia_neg": 12, "serbia_pos": 3, "georgia_neg": 6, "georgia_pos": 2},
+    {"date": "2025-02-10", "serbia_neg": 12, "serbia_pos": 3, "georgia_neg": 6, "georgia_pos": 2},
+    {"date": "2025-02-03", "serbia_neg": 12, "serbia_pos": 3, "georgia_neg": 7, "georgia_pos": 2},
+    {"date": "2025-01-27", "serbia_neg": 11, "serbia_pos": 3, "georgia_neg": 7, "georgia_pos": 3},
+    {"date": "2025-01-20", "serbia_neg": 8, "serbia_pos": 2, "georgia_neg": 6, "georgia_pos": 3},
+    {"date": "2025-01-13", "serbia_neg": 3, "serbia_pos": 2, "georgia_neg": 4, "georgia_pos": 3},
+    {"date": "2025-01-06", "serbia_neg": 2, "serbia_pos": 2, "georgia_neg": 3, "georgia_pos": 3},
+    {"date": "2024-12-30", "serbia_neg": 2, "serbia_pos": 2, "georgia_neg": 3, "georgia_pos": 4},
+]
+
 
 @app.get("/protests", summary="Get protests time-series data")
 async def get_protests():
@@ -157,6 +183,12 @@ async def get_migration():
 async def get_gini():
     """Return Gini index data (list sorted by year descending)."""
     return GINI
+
+
+@app.get("/news_articles", summary="Get news articles by week for Georgia and Serbia")
+async def get_news_articles():
+    """Return news articles data (list sorted by date descending)."""
+    return NEWS_ARTICLES
 
 
 if __name__ == "__main__":

@@ -6,9 +6,10 @@ app = FastAPI(title="Protests API")
 # Allow all origins (for dev purposes) so that React frontend (different port) can fetch the data
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://31.129.48.166",
+    ],
 )
 
 # Hard-coded data derived from the spreadsheet (dates converted to ISO-8601 format)

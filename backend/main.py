@@ -152,7 +152,7 @@ async def get_migration():
     return MIGRATION
 
 
-@app.get("/api/gini", summary="Get Gini index per year")
+@app.get("/gini", summary="Get Gini index per year")
 async def get_gini():
     """Return Gini index data (list sorted by year descending)."""
     return GINI

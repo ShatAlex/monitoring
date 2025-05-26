@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
 app = FastAPI(title="Protests API")
 
@@ -155,3 +156,7 @@ async def get_migration():
 async def get_gini():
     """Return Gini index data (list sorted by year descending)."""
     return GINI
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

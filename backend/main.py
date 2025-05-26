@@ -10,6 +10,9 @@ app.add_middleware(
         "http://localhost:5173",
         "http://31.129.48.166",
     ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Hard-coded data derived from the spreadsheet (dates converted to ISO-8601 format)

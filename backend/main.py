@@ -19,6 +19,7 @@ app.add_middleware(
 
 # Hard-coded data derived from the spreadsheet (dates converted to ISO-8601 format)
 DATA = [
+    {"date": "2025-06-02", "serbia": 32, "georgia": 11},
     {"date": "2025-05-26", "serbia": 30, "georgia": 9},
     {"date": "2025-05-19", "serbia": 27, "georgia": 8},
     {"date": "2025-05-12", "serbia": 25, "georgia": 13},
@@ -128,6 +129,7 @@ GINI = [
 ]
 
 NEWS_ARTICLES = [
+    {"date": "2025-06-02", "serbia_neg": 4, "serbia_pos": 2, "georgia_neg": 3, "georgia_pos": 1},
     {"date": "2025-05-26", "serbia_neg": 3, "serbia_pos": 2, "georgia_neg": 2, "georgia_pos": 1},
     {"date": "2025-05-19", "serbia_neg": 3, "serbia_pos": 1, "georgia_neg": 2, "georgia_pos": 1},
     {"date": "2025-05-12", "serbia_neg": 3, "serbia_pos": 1, "georgia_neg": 2, "georgia_pos": 2},

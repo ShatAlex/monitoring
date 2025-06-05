@@ -841,19 +841,19 @@ export default function App() {
         {/* Грузия */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ color: '#9966ff', fontWeight: 700, fontSize: '1.15em' }}>Грузия:</span>
-          <span style={{ fontWeight: 700, fontSize: '1.25em', color: '#222' }}>25,89%</span>
+          <span style={{ fontWeight: 700, fontSize: '1.25em', color: '#222' }}>26,12%</span>
           <span style={{ fontSize: '1.1em', marginLeft: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
             <span style={{ color: '#e53935', fontSize: '1.2em', fontWeight: 700, display: 'inline-flex', alignItems: 'center' }}>▲</span>
-            <span style={{ color: '#e53935', fontWeight: 700 }}>+1,79%</span>
+            <span style={{ color: '#e53935', fontWeight: 700 }}>+1,84%</span>
           </span>
         </div>
         {/* Сербия */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ color: '#4bc0c0', fontWeight: 700, fontSize: '1.15em' }}>Сербия:</span>
-          <span style={{ fontWeight: 700, fontSize: '1.25em', color: '#222' }}>11,78%</span>
+          <span style={{ fontWeight: 700, fontSize: '1.25em', color: '#222' }}>11,93%</span>
           <span style={{ fontSize: '1.1em', marginLeft: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
             <span style={{ color: '#43a047', fontSize: '1.2em', fontWeight: 700, display: 'inline-flex', alignItems: 'center' }}>▼</span>
-            <span style={{ color: '#43a047', fontWeight: 700 }}>-1,36%</span>
+            <span style={{ color: '#43a047', fontWeight: 700 }}>-1,14%</span>
           </span>
         </div>
       </div>

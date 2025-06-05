@@ -793,7 +793,7 @@ export default function App() {
   useEffect(() => {
     function updateTimer() {
       const now = new Date();
-      const nextUpdate = new Date('2025-06-02T00:00:00');
+      const nextUpdate = new Date('2025-06-09T00:00:00');
       const diff = nextUpdate - now;
       if (diff <= 0) {
         setTimer('00:00:00');

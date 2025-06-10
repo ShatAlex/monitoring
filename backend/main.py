@@ -4,7 +4,7 @@ import uvicorn
 
 app = FastAPI(title="Protests API")
 
-# Allow all origins (for dev purposes) so that React frontend (different port) can fetch the data
+# !
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[

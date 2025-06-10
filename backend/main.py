@@ -4,7 +4,7 @@ import uvicorn
 
 app = FastAPI(title="Protests API")
 
-# !
+# !!
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
